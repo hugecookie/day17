@@ -28,15 +28,9 @@ def de_queue():
     if is_queue_empty():
         print("Queue is empty!")
         return None
-    front += 1
+    front = (front + 1) % SIZE
     data = queue[front]
     queue[front] = None
-
-    for i in range(front + 1, rear + 1):  # 모든 사람을 한칸씩 앞으로 당긴다.
-        queue[i - 1] = queue[i]
-        queue[i] = None
-    front = -1
-    rear -= 1
 
     return data
 
@@ -49,18 +43,25 @@ def peek():
     return queue[front + 1]
 
 
+def sum_time():
+    global SIZE, queue, front, rear
+    timesum = 0
+    for i in range(front + 1, rear + 1):
+        timesum = timesum + people[i][1]
+    return timesum
+
+
 SIZE = 5
 queue = [None for _ in range(SIZE)]
 front = rear = -1
-people = ['정국', '뷔', '지민', '진', '슈가']
+people = [('사용', 4), ('컴플레인', 20), ('명의변경', 10), ('환불요청', 3), ('고장', 5)]
+
 if __name__ == "__main__":
-    for i in range(5):
+    for i in range(SIZE):
         en_queue(people[i])
-
-    print("대기 줄 상태 : ", queue)
-
-    for _ in range(rear + 1):
-        print(f'{de_queue()}님 식당에 들어감')
-        print(f'대기 줄 상태 : {queue}')
-
-    print("식당 영업 종료!")
+        print(f"귀하의 예상 대기 시간은 {sum_time()}분 입니다. ")
+        if i == SIZE - 1:
+            print(f'최종 대기 콜 : {queue}')
+            print('프로그램 종료!')
+            break
+        print(f'대기 콜 : {queue}')
