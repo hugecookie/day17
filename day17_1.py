@@ -1,70 +1,66 @@
-class treenode:
-    def __init__(self):
-        self.left = None
-        self.data = None
-        self.right = None
+def is_queue_full():
+    global SIZE, queue, front, rear
+    if rear == SIZE - 1:
+        return True
+    else:
+        return False
 
 
-node1 = treenode()
-node1.data = '피카츄'
-
-node2 = treenode()
-node2.data = '라이츄'
-node1.left = node2
-
-node3 = treenode()
-node3.data = '꼬부기'
-node1.right = node3
-
-node4 = treenode()
-node4.data = '어니부기'
-node2.left = node4
-
-node5 = treenode()
-node5.data = '거북왕'
-node2.right = node5
-
-node6 = treenode()
-node6.data = '파이리'
-node5.right = node6
-
-node7 = treenode()
-node7.data = '또가스'
-node3.right = node7
+def is_queue_empty():
+    global SIZE, queue, front, rear
+    if front == rear:
+        return True
+    else:
+        return False
 
 
-def presort(node):
-    if node is None:
+def en_queue(data):
+    global SIZE, queue, front, rear
+    if is_queue_full():
+        print("Queue is full!")
         return
-    print(node.data, end='->')
-    presort(node.left)
-    presort(node.right)
+    rear += 1
+    queue[rear] = data
 
 
-def insort(node):
-    if node is None:
-        return
-    insort(node.left)
-    print(node.data, end='->')
-    insort(node.right)
+def de_queue():
+    global SIZE, queue, front, rear
+    if is_queue_empty():
+        print("Queue is empty!")
+        return None
+    front += 1
+    data = queue[front]
+    queue[front] = None
+
+    for i in range(front + 1, rear + 1):  # 모든 사람을 한칸씩 앞으로 당긴다.
+        queue[i - 1] = queue[i]
+        queue[i] = None
+    front = -1
+    rear -= 1
+
+    return data
 
 
-def postsort(node):
-    if node is None:
-        return
-    postsort(node.left)
-    postsort(node.right)
-    print(node.data, end='->')
+def peek():
+    global SIZE, queue, front, rear
+    if is_queue_empty():
+        print("Queue is empty")
+        return None
+    return queue[front + 1]
 
 
-print('전위 순회 : ', end='')
-presort(node1)
-print('끝')
+SIZE = 5
+queue = [None for _ in range(SIZE)]
+front = rear = -1
+people = ['정국', '뷔', '지민', '진', '슈가']
+if __name__ == "__main__":
+    for i in range(5):
+        en_queue(people[i])
 
-print('중위 순회 : ', end='')
-insort(node1)
-print('끝')
+    print("대기 줄 상태 : ", queue)
 
-print('후위 순회 : ', end='')
-postsort(node1)
-print('끝')
+    for _ in range(rear + 1):
+        print(f'{de_queue()}님 식당에 들어감')
+        print(f'대기 줄 상태 : {queue}')
+
+    print("식당 영업 종료!")
