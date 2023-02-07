@@ -1,12 +1,4 @@
-import random
-
-
-def pre_sort(node):
-    if node == None:
-        return
-    print(node.data, end=' ')
-    pre_sort(node.left)
-    pre_sort(node.right)
+import os
 
 
 class tree_node:
@@ -17,16 +9,21 @@ class tree_node:
 
 
 root = None
-dataAry = ['바나나맛우유', '레쓰비캔커피', '츄파춥스', '도시락', '삼다수', '코카콜라', '삼각김밥']
-sellAry = [random.choice(dataAry) for _ in range(20)]
+nameAry = []
 
-print('오늘 판매된 물건(중복O) -->', sellAry)
+
+folderName = 'C:/Program Files/Common Files/'
+for dirName, subDirList, fnames in os.walk(folderName):
+    for fname in fnames:
+        nameAry.append(fname)
 
 node = tree_node()
-node.data = sellAry[0]
+node.data = nameAry[0]
 root = node
 
-for name in sellAry[1:]:
+dupNameAry = []
+
+for name in nameAry[1:]:
 
     node = tree_node()
     node.data = name
@@ -34,6 +31,7 @@ for name in sellAry[1:]:
     current = root
     while True:
         if name == current.data:
+            dupNameAry.append(name)
             break
         if name < current.data:
             if current.left == None:
@@ -46,7 +44,7 @@ for name in sellAry[1:]:
                 break
             current = current.right
 
-print("이진 탐색 트리 구성 완료!")
+dupNameAry = list(set(dupNameAry))
 
-print('오늘 판매된 종류(중복X)--> ', end=' ')
-pre_sort(root)
+print(f'{folderName} 및 그 하위 디렉터리의 중복된 파일 목록 -->')
+print(dupNameAry)
