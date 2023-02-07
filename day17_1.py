@@ -1,65 +1,73 @@
-def is_stack_full():
-    global SIZE, stack, top
-    if top >= SIZE - 1:
+def is_queue_full():
+    global SIZE, queue, front, rear
+    if (rear + 1) % SIZE == front:
         return True
-    return False
+    else:
+        return False
 
 
-def is_stack_empty():
-    global SIZE, stack, top
-    if top == -1:
+def is_queue_empty():
+    global SIZE, queue, front, rear
+    if front == rear:
         return True
-    return False
+    else:
+        return False
 
 
-def push(data):
-    global SIZE, stack, top
-    if is_stack_full():
-        print("Stack is FULL!")
+def enqueue(dat):
+    global SIZE, queue, front, rear
+    if is_queue_full():
+        print("Queue is full!")
         return
-    top = top + 1
-    stack[top] = data
+    rear = (rear + 1) % SIZE
+    queue[rear] = dat
 
 
-def pop():
-    global SIZE, stack, top
-    if is_stack_empty():
-        print("Stack is EMPTY~")
-        return
-    temp = stack[top]
-    stack[top] = None
-    top = top - 1
-    return temp
-
-def check_bracket(expr):
-    for ch in expr:
-        if ch in '([{<':
-            push(ch)
-        elif ch in ')]}>':
-            out = pop()
-            if ch == ')' and out == '(':
-                pass
-            elif ch == ']' and out == '[':
-                pass
-            elif ch == '}' and out == '{':
-                pass
-            elif ch == '>' and out == '<':
-                pass
-            else:
-                return False
-        else:
-            pass
-    return is_stack_empty()
+def dequeue():
+    global SIZE, queue, front, rear
+    if is_queue_empty():
+        print("Queue is empty!")
+        return None
+    front = (front + 1) % SIZE
+    data = queue[front]
+    queue[front] = None
+    return data
 
 
-SIZE = 5
-stack = [None for _ in range(SIZE)]
-top = -1
+def peek():
+    global SIZE, queue, front, rear
+    if is_queue_empty():
+        print("Queue is empty!")
+        return None
+    return queue[(front + 1) % SIZE]
 
+
+SIZE = int(input("SIZE of Queue : "))
+queue = [None for _ in range(SIZE)]
+front = rear = 0
 
 if __name__ == "__main__":
-    expression_array = ['(2*[A+B)]', '(A+B)', ')A+B(', '((A+B)-C', '(A+B]', '(<A+{B-C}/[C*D]>)']
 
-    for expression in expression_array:
-        top = -1
-        print(expression, ' : ', check_bracket(expression))
+    while True:
+        select = input("Insert(i)/Extract(e)/Veripy(v)/eXit(x) : ")
+        if select == 'X' or select == 'x':
+            break
+        elif select == 'I' or select == 'i':
+            data = input("Insert data : ")
+            enqueue(data)
+            print("queue status : ", queue)
+            print("front : ", front, ", rear : ", rear)
+        elif select == 'E' or select == 'e':
+            data = dequeue()
+            print("extract data ==> ", data)
+            print("queue status : ", queue)
+            print("front : ", front, ", rear : ", rear)
+        elif select == 'V' or select == 'v':
+            data = peek()
+            print("veripy data ==> ", data)
+            print("queue status : ", queue)
+            print("front : ", front, ", rear : ", rear)
+        else:
+            print("input mismatch")
+
+    print("program exit!")
