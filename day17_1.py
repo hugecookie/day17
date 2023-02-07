@@ -1,73 +1,70 @@
-def is_queue_full():
-    global SIZE, queue, front, rear
-    if (rear + 1) % SIZE == front:
-        return True
-    else:
-        return False
+class treenode:
+    def __init__(self):
+        self.left = None
+        self.data = None
+        self.right = None
 
 
-def is_queue_empty():
-    global SIZE, queue, front, rear
-    if front == rear:
-        return True
-    else:
-        return False
+node1 = treenode()
+node1.data = '피카츄'
+
+node2 = treenode()
+node2.data = '라이츄'
+node1.left = node2
+
+node3 = treenode()
+node3.data = '꼬부기'
+node1.right = node3
+
+node4 = treenode()
+node4.data = '어니부기'
+node2.left = node4
+
+node5 = treenode()
+node5.data = '거북왕'
+node2.right = node5
+
+node6 = treenode()
+node6.data = '파이리'
+node5.right = node6
+
+node7 = treenode()
+node7.data = '또가스'
+node3.right = node7
 
 
-def enqueue(dat):
-    global SIZE, queue, front, rear
-    if is_queue_full():
-        print("Queue is full!")
+def presort(node):
+    if node is None:
         return
-    rear = (rear + 1) % SIZE
-    queue[rear] = dat
+    print(node.data, end='->')
+    presort(node.left)
+    presort(node.right)
 
 
-def dequeue():
-    global SIZE, queue, front, rear
-    if is_queue_empty():
-        print("Queue is empty!")
-        return None
-    front = (front + 1) % SIZE
-    data = queue[front]
-    queue[front] = None
-    return data
+def insort(node):
+    if node is None:
+        return
+    insort(node.left)
+    print(node.data, end='->')
+    insort(node.right)
 
 
-def peek():
-    global SIZE, queue, front, rear
-    if is_queue_empty():
-        print("Queue is empty!")
-        return None
-    return queue[(front + 1) % SIZE]
+def postsort(node):
+    if node is None:
+        return
+    postsort(node.left)
+    postsort(node.right)
+    print(node.data, end='->')
 
 
-SIZE = int(input("SIZE of Queue : "))
-queue = [None for _ in range(SIZE)]
-front = rear = 0
+print('전위 순회 : ', end='')
+presort(node1)
+print('끝')
 
-if __name__ == "__main__":
+print('중위 순회 : ', end='')
+insort(node1)
+print('끝')
 
-    while True:
-        select = input("Insert(i)/Extract(e)/Veripy(v)/eXit(x) : ")
-        if select == 'X' or select == 'x':
-            break
-        elif select == 'I' or select == 'i':
-            data = input("Insert data : ")
-            enqueue(data)
-            print("queue status : ", queue)
-            print("front : ", front, ", rear : ", rear)
-        elif select == 'E' or select == 'e':
-            data = dequeue()
-            print("extract data ==> ", data)
-            print("queue status : ", queue)
-            print("front : ", front, ", rear : ", rear)
-        elif select == 'V' or select == 'v':
-            data = peek()
-            print("veripy data ==> ", data)
-            print("queue status : ", queue)
-            print("front : ", front, ", rear : ", rear)
-        else:
-            print("input mismatch")
-
-    print("program exit!")
+print('후위 순회 : ', end='')
+postsort(node1)
+print('끝')
