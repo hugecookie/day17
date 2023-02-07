@@ -1,67 +1,52 @@
-def is_queue_full():
-    global SIZE, queue, front, rear
-    if rear == SIZE - 1:
-        return True
-    else:
-        return False
+import random
 
 
-def is_queue_empty():
-    global SIZE, queue, front, rear
-    if front == rear:
-        return True
-    else:
-        return False
-
-
-def en_queue(data):
-    global SIZE, queue, front, rear
-    if is_queue_full():
-        print("Queue is full!")
+def pre_sort(node):
+    if node == None:
         return
-    rear += 1
-    queue[rear] = data
+    print(node.data, end=' ')
+    pre_sort(node.left)
+    pre_sort(node.right)
 
 
-def de_queue():
-    global SIZE, queue, front, rear
-    if is_queue_empty():
-        print("Queue is empty!")
-        return None
-    front = (front + 1) % SIZE
-    data = queue[front]
-    queue[front] = None
-
-    return data
+class tree_node:
+    def __init__(self):
+        self.left = None
+        self.data = None
+        self.right = None
 
 
-def peek():
-    global SIZE, queue, front, rear
-    if is_queue_empty():
-        print("Queue is empty")
-        return None
-    return queue[front + 1]
+root = None
+dataAry = ['바나나맛우유', '레쓰비캔커피', '츄파춥스', '도시락', '삼다수', '코카콜라', '삼각김밥']
+sellAry = [random.choice(dataAry) for _ in range(20)]
 
+print('오늘 판매된 물건(중복O) -->', sellAry)
 
-def sum_time():
-    global SIZE, queue, front, rear
-    timesum = 0
-    for i in range(front + 1, rear + 1):
-        timesum = timesum + people[i][1]
-    return timesum
+node = tree_node()
+node.data = sellAry[0]
+root = node
 
+for name in sellAry[1:]:
 
-SIZE = 5
-queue = [None for _ in range(SIZE)]
-front = rear = -1
-people = [('사용', 4), ('컴플레인', 20), ('명의변경', 10), ('환불요청', 3), ('고장', 5)]
+    node = tree_node()
+    node.data = name
 
-if __name__ == "__main__":
-    for i in range(SIZE):
-        en_queue(people[i])
-        print(f"귀하의 예상 대기 시간은 {sum_time()}분 입니다. ")
-        if i == SIZE - 1:
-            print(f'최종 대기 콜 : {queue}')
-            print('프로그램 종료!')
+    current = root
+    while True:
+        if name == current.data:
             break
-        print(f'대기 콜 : {queue}')
+        if name < current.data:
+            if current.left == None:
+                current.left = node
+                break
+            current = current.left
+        else:
+            if current.right == None:
+                current.right = node
+                break
+            current = current.right
+
+print("이진 탐색 트리 구성 완료!")
+
+print('오늘 판매된 종류(중복X)--> ', end=' ')
+pre_sort(root)
